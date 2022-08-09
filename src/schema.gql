@@ -13,6 +13,7 @@ type Restaurant {
 
 type Query {
   restaurants: [Restaurant!]!
+  hi: Boolean!
 }
 
 type Mutation {

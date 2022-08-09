@@ -7,6 +7,9 @@ import { join } from 'path';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import * as Joi from 'joi';
 import { Restaurant } from './restaurants/entities/restaurant.entity';
+import { UsersModule } from './users/users.module';
+import { CommonModule } from './common/common.module';
+import { User } from './users/entities/user.entitiy';
 
 @Module({
   imports: [
@@ -37,10 +40,12 @@ import { Restaurant } from './restaurants/entities/restaurant.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Restaurant],
+      entities: [Restaurant, User],
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod',
     }),
+    UsersModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],

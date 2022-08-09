@@ -16,6 +16,9 @@ const path_1 = require("path");
 const restaurants_module_1 = require("./restaurants/restaurants.module");
 const Joi = require("joi");
 const restaurant_entity_1 = require("./restaurants/entities/restaurant.entity");
+const users_module_1 = require("./users/users.module");
+const common_module_1 = require("./common/common.module");
+const user_entitiy_1 = require("./users/entities/user.entitiy");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -48,10 +51,12 @@ AppModule = __decorate([
                 username: process.env.DB_USERNAME,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_NAME,
-                entities: [restaurant_entity_1.Restaurant],
+                entities: [restaurant_entity_1.Restaurant, user_entitiy_1.User],
                 synchronize: process.env.NODE_ENV !== 'prod',
                 logging: process.env.NODE_ENV !== 'prod',
             }),
+            users_module_1.UsersModule,
+            common_module_1.CommonModule,
         ],
         controllers: [],
         providers: [],
