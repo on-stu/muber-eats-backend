@@ -39,6 +39,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
       debug: true,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: true,
+      context: ({ req }) => ({ user: req['user'] }),
     }),
     RestaurantsModule,
     TypeOrmModule.forRoot({
@@ -63,7 +64,7 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(JwtMiddleware).forRoutes({
       path: '*',
-      method: RequestMethod.ALL,
+      method: RequestMethod.POST,
     });
   }
 }

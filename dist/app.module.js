@@ -25,7 +25,7 @@ let AppModule = class AppModule {
     configure(consumer) {
         consumer.apply(jwt_middleware_1.JwtMiddleware).forRoutes({
             path: '*',
-            method: common_1.RequestMethod.ALL,
+            method: common_1.RequestMethod.POST,
         });
     }
 };
@@ -51,6 +51,7 @@ AppModule = __decorate([
                 debug: true,
                 autoSchemaFile: (0, path_1.join)(process.cwd(), 'src/schema.gql'),
                 playground: true,
+                context: ({ req }) => ({ user: req['user'] }),
             }),
             restaurants_module_1.RestaurantsModule,
             typeorm_1.TypeOrmModule.forRoot({
