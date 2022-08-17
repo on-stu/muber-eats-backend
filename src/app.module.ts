@@ -17,6 +17,7 @@ import { CommonModule } from './common/common.module';
 import { User } from './users/entities/user.entitiy';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -54,7 +55,6 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
       logging: process.env.NODE_ENV !== 'prod',
     }),
     UsersModule,
-    CommonModule,
     JwtModule.forRoot({ privateKey: process.env.PRIVATE_KEY }),
   ],
   controllers: [],
