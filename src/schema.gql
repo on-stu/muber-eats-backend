@@ -2,15 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Restaurant {
-  id: Float!
-  name: String!
-  isVegan: Boolean!
-  address: String!
-  ownerName: String!
-  categoryName: String
-}
-
 type User {
   id: Float!
   createdAt: DateTime!
@@ -19,6 +10,7 @@ type User {
   password: String!
   role: UserRole!
   verified: Boolean!
+  restaurants: [Restaurant!]!
 }
 
 """
@@ -30,6 +22,76 @@ enum UserRole {
   Client
   Owner
   Delivery
+}
+
+type Restaurant {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  coverImg: String!
+  address: String!
+  category: Category
+  owner: User!
+}
+
+type Category {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  coverImg: String
+  slug: String!
+  restaurants: [Restaurant!]
+  restaurantCount: Float!
+}
+
+type AllCategoriesOutput {
+  error: String
+  ok: Boolean!
+  categories: [Category!]
+}
+
+type CategoryOutput {
+  error: String
+  ok: Boolean!
+  totalPages: Float
+  category: Category
+}
+
+type CreateRestaurantOutput {
+  error: String
+  ok: Boolean!
+}
+
+type DeleteRestaurantOutput {
+  error: String
+  ok: Boolean!
+}
+
+type EditRestaurantOutput {
+  error: String
+  ok: Boolean!
+}
+
+type RestaurantOutput {
+  error: String
+  ok: Boolean!
+  restaurant: Restaurant
+}
+
+type RestaurantsOutput {
+  error: String
+  ok: Boolean!
+  totalPages: Float
+  restaurants: [Restaurant!]
+}
+
+type SearchRestaruntOutput {
+  error: String
+  ok: Boolean!
+  totalPages: Float
+  restaurants: [Restaurant!]
 }
 
 type CreateAccountOutput {
@@ -60,34 +122,60 @@ type VerifyEmailOutput {
 }
 
 type Query {
-  restaurants: [Restaurant!]!
+  allCategories: AllCategoriesOutput!
+  category(input: CategoryInput!): CategoryOutput!
+  restaurants(input: RestaurantsInput!): RestaurantsOutput!
+  restaurant(input: RestaurantInput!): RestaurantOutput!
+  searchRestaurant(input: SearchRestaruntInput!): SearchRestaruntOutput!
   me: User!
   userProfile(userId: Float!): UserProfileOutput!
 }
 
+input CategoryInput {
+  page: Float = 1
+  slug: String!
+}
+
+input RestaurantsInput {
+  page: Float = 1
+}
+
+input RestaurantInput {
+  restaurantId: Float!
+}
+
+input SearchRestaruntInput {
+  page: Float = 1
+  query: String!
+}
+
 type Mutation {
-  createRestaurant(input: CreateRestaurantDto!): Boolean!
-  updateRestaurant(id: Float!, data: UpdateRestaurantInputType!): Boolean!
+  createRestaurant(input: CreateRestaurantInput!): CreateRestaurantOutput!
+  editRestaurant(input: EditRestaurantInput!): EditRestaurantOutput!
+  deleteRestaurant(input: DeleteRestaurantInput!): DeleteRestaurantOutput!
   createAccount(input: CreateAccountInput!): CreateAccountOutput!
   login(input: LoginInput!): LoginOutput!
   editProfile(input: EditProfileInput!): EditProfileOutput!
   verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
 }
 
-input CreateRestaurantDto {
+input CreateRestaurantInput {
   name: String!
-  isVegan: Boolean = true
+  coverImg: String!
   address: String!
-  ownerName: String!
-  categoryName: String
+  categoryName: String!
 }
 
-input UpdateRestaurantInputType {
+input EditRestaurantInput {
   name: String
-  isVegan: Boolean = true
+  coverImg: String
   address: String
-  ownerName: String
   categoryName: String
+  restaurantId: Float!
+}
+
+input DeleteRestaurantInput {
+  restaurantId: Float!
 }
 
 input CreateAccountInput {
