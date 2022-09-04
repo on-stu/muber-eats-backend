@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entitiy';
-import { Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { AllCategoriesOutput } from './dtos/all-categories.dto';
 import { CategoryInput, CategoryOutput } from './dtos/category.dto';
+import { CreateDishInput, CreateDishOutput } from './dtos/create-dish.dto';
 import {
   CreateRestaurantInput,
   CreateRestaurantOutput,
@@ -23,6 +24,7 @@ import {
   SearchRestaruntOutput,
 } from './dtos/search-restuarant.dto';
 import { Category } from './entities/category.entity';
+import { Dish } from './entities/dish.entity';
 import { Restaurant } from './entities/restaurant.entity';
 
 @Injectable()
@@ -32,6 +34,8 @@ export class RestaurantService {
     private readonly restaurants: Repository<Restaurant>,
     @InjectRepository(Category)
     private readonly category: Repository<Category>,
+    @InjectRepository(Dish)
+    private readonly dishes: Repository<Dish>,
   ) {}
 
   private async getOrCreateCategory(name: string): Promise<Category> {
@@ -232,6 +236,7 @@ export class RestaurantService {
     try {
       const restaurant = await this.restaurants.findOne({
         where: { id: restaurantInput.restaurantId },
+        relations: ['menu'],
       });
       if (!restaurant) {
         return {
@@ -254,7 +259,9 @@ export class RestaurantService {
   }: SearchRestaruntInput): Promise<SearchRestaruntOutput> {
     try {
       const [restaurants, totalResults] = await this.restaurants.findAndCount({
-        where: { name: Like(`%${query}%`) },
+        where: { name: ILike(`%${query}%`) },
+        take: 25,
+        skip: (page - 1) * 25,
       });
       if (!restaurants) {
         return {
@@ -265,7 +272,41 @@ export class RestaurantService {
       return {
         ok: true,
         restaurants,
+        totalPages: Math.ceil(totalResults / 25),
       };
+    } catch (error) {
+      return {
+        ok: false,
+        error,
+      };
+    }
+  }
+
+  async createDish(
+    owner: User,
+    createDishInput: CreateDishInput,
+  ): Promise<CreateDishOutput> {
+    const restaurant = await this.restaurants.findOne({
+      where: { id: createDishInput.restaurantId },
+    });
+    if (!restaurant) {
+      return {
+        ok: false,
+        error: 'Restaurant not found',
+      };
+    }
+    if (owner.id !== restaurant.ownerId) {
+      return {
+        ok: false,
+        error: 'You Cannot Do that',
+      };
+    }
+    try {
+      await this.dishes.save(
+        this.dishes.create({ ...createDishInput, restaurant }),
+      );
+
+      return { ok: true };
     } catch (error) {
       return {
         ok: false,
