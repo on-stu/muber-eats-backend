@@ -21,6 +21,7 @@ import { MailModule } from './mail/mail.module';
 import { Category } from './restaurants/entities/category.entity';
 import { AuthModule } from './auth/auth.module';
 import { Dish } from './restaurants/entities/dish.entity';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { Dish } from './restaurants/entities/dish.entity';
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
       domain: process.env.MAILGUN_DOMAIN,
     }),
+    OrdersModule,
   ],
   controllers: [],
   providers: [],
