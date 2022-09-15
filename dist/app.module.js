@@ -26,6 +26,8 @@ const category_entity_1 = require("./restaurants/entities/category.entity");
 const auth_module_1 = require("./auth/auth.module");
 const dish_entity_1 = require("./restaurants/entities/dish.entity");
 const orders_module_1 = require("./orders/orders.module");
+const order_entity_1 = require("./orders/entities/order.entity");
+const order_item_1 = require("./orders/entities/order-item");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer.apply(jwt_middleware_1.JwtMiddleware).forRoutes({
@@ -69,7 +71,15 @@ AppModule = __decorate([
                 username: process.env.DB_USERNAME,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_NAME,
-                entities: [restaurant_entity_1.Restaurant, user_entitiy_1.User, verification_entity_1.Verification, category_entity_1.Category, dish_entity_1.Dish],
+                entities: [
+                    restaurant_entity_1.Restaurant,
+                    user_entitiy_1.User,
+                    verification_entity_1.Verification,
+                    category_entity_1.Category,
+                    dish_entity_1.Dish,
+                    order_entity_1.Order,
+                    order_item_1.OrderItem,
+                ],
                 synchronize: process.env.NODE_ENV !== 'prod',
                 logging: process.env.NODE_ENV !== 'prod',
             }),

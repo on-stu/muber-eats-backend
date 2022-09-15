@@ -11,6 +11,8 @@ type User {
   role: UserRole!
   verified: Boolean!
   restaurants: [Restaurant!]!
+  orders: [Order!]!
+  rides: [Order!]!
 }
 
 """
@@ -24,10 +26,15 @@ enum UserRole {
   Delivery
 }
 
+type DishChoice {
+  name: String!
+  extra: Int
+}
+
 type DishOption {
   name: String!
   choices: String
-  extra: Float!
+  extra: Float
 }
 
 type Dish {
@@ -42,6 +49,39 @@ type Dish {
   options: [DishOption!]
 }
 
+type OrderItemOption {
+  name: String!
+  choices: DishChoice
+  extra: Float!
+}
+
+type OrderItem {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  dish: Dish!
+  options: [OrderItemOption!]
+}
+
+type Order {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  customer: User
+  driver: User
+  restaurant: Restaurant
+  items: [OrderItem!]!
+  total: Float
+  status: OrderStatus!
+}
+
+enum OrderStatus {
+  Pending
+  Cooking
+  PickedUp
+  Delivered
+}
+
 type Restaurant {
   id: Float!
   createdAt: DateTime!
@@ -52,6 +92,7 @@ type Restaurant {
   category: Category
   owner: User!
   menu: [Dish!]
+  orders: [Order!]!
 }
 
 type Category {
@@ -155,6 +196,11 @@ type VerifyEmailOutput {
   ok: Boolean!
 }
 
+type CreateOrderOutput {
+  error: String
+  ok: Boolean!
+}
+
 type Query {
   allCategories: AllCategoriesOutput!
   category(input: CategoryInput!): CategoryOutput!
@@ -194,6 +240,7 @@ type Mutation {
   login(input: LoginInput!): LoginOutput!
   editProfile(input: EditProfileInput!): EditProfileOutput!
   verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
+  createOrder(input: CreateOrderInput!): CreateOrderOutput!
 }
 
 input CreateRestaurantInput {
@@ -226,7 +273,7 @@ input CreateDishInput {
 input DishOptionInputType {
   name: String!
   choices: String
-  extra: Float!
+  extra: Float
 }
 
 input DeleteDishInput {
@@ -259,4 +306,25 @@ input EditProfileInput {
 
 input VerifyEmailInput {
   code: String!
+}
+
+input CreateOrderInput {
+  restaurantId: Int!
+  items: [CreateOrderItemInput!]!
+}
+
+input CreateOrderItemInput {
+  dishId: Int!
+  options: [OrderOptionInputType!]
+}
+
+input OrderOptionInputType {
+  name: String!
+  choices: DishChoiceInputType
+  extra: Float!
+}
+
+input DishChoiceInputType {
+  name: String!
+  extra: Int
 }

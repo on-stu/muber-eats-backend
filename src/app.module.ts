@@ -22,6 +22,8 @@ import { Category } from './restaurants/entities/category.entity';
 import { AuthModule } from './auth/auth.module';
 import { Dish } from './restaurants/entities/dish.entity';
 import { OrdersModule } from './orders/orders.module';
+import { Order } from './orders/entities/order.entity';
+import { OrderItem } from './orders/entities/order-item';
 
 @Module({
   imports: [
@@ -57,7 +59,15 @@ import { OrdersModule } from './orders/orders.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Restaurant, User, Verification, Category, Dish],
+      entities: [
+        Restaurant,
+        User,
+        Verification,
+        Category,
+        Dish,
+        Order,
+        OrderItem,
+      ],
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod',
     }),
