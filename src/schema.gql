@@ -26,11 +26,6 @@ enum UserRole {
   Delivery
 }
 
-type DishChoice {
-  name: String!
-  extra: Int
-}
-
 type DishOption {
   name: String!
   choices: String
@@ -51,8 +46,7 @@ type Dish {
 
 type OrderItemOption {
   name: String!
-  choices: DishChoice
-  extra: Float!
+  choices: String
 }
 
 type OrderItem {
@@ -320,11 +314,5 @@ input CreateOrderItemInput {
 
 input OrderOptionInputType {
   name: String!
-  choices: DishChoiceInputType
-  extra: Float!
-}
-
-input DishChoiceInputType {
-  name: String!
-  extra: Int
+  choices: String
 }
